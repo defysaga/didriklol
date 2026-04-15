@@ -3,49 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Didriks Dashboard</title>
+    <title>Didriks Dashboard - Harry Hole Edition</title>
     <style>
-        /* CSS - Designet */
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #eef2f3; margin: 0; color: #333; }
+        /* --- Standard Design --- */
+        :root {
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --bg: #eef2f3;
+            --noir-bg: #1a1a1a;
+            --noir-text: #dcdcdc;
+            --gold: #f1c40f;
+        }
+
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); margin: 0; color: #333; overflow-x: hidden; }
         
-        nav { background: #2c3e50; padding: 15px; display: flex; justify-content: center; gap: 10px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        nav { background: var(--primary); padding: 15px; display: flex; justify-content: center; gap: 10px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); flex-wrap: wrap; }
         nav button { background: #34495e; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
         nav button:hover { background: #1abc9c; }
+        nav button.active-nav { background: var(--accent); }
 
-        .container { max-width: 800px; margin: 40px auto; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        .tab { display: none; animation: fadeIn 0.5s; }
-        .active { display: block; }
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; position: relative; }
+        .tab { display: none; }
+        .active { display: block; animation: fadeIn 0.5s; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Forside-knapp */
-        .giant-btn { background: #e74c3c; color: white; border: none; padding: 40px; font-size: 22px; border-radius: 20px; cursor: pointer; box-shadow: 0 8px 0 #c0392b; width: 100%; transition: 0.1s; }
+        .giant-btn { background: var(--accent); color: white; border: none; padding: 40px; font-size: 22px; border-radius: 20px; cursor: pointer; box-shadow: 0 8px 0 #c0392b; width: 100%; transition: 0.1s; margin: 20px 0; }
         .giant-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #c0392b; }
 
         /* Stress-spill */
-        #game-area { height: 400px; border: 3px solid #ecf0f1; border-radius: 10px; position: relative; overflow: hidden; background: #f9f9f9; margin-top: 20px; }
-        .stress-target { position: absolute; padding: 8px 15px; background: #3498db; color: white; border-radius: 20px; cursor: pointer; user-select: none; font-size: 14px; white-space: nowrap; }
+        #game-area { height: 400px; border: 3px solid #ecf0f1; border-radius: 10px; position: relative; overflow: hidden; background: #f9f9f9; margin-top: 20px; cursor: crosshair; }
+        .stress-target { position: absolute; padding: 8px 15px; background: #3498db; color: white; border-radius: 20px; cursor: pointer; user-select: none; font-size: 14px; white-space: nowrap; animation: targetSpawn 0.3s ease-out; }
+        @keyframes targetSpawn { from { transform: scale(0); } to { transform: scale(1); } }
 
         /* Bolig-slots */
         .slot-container { background: #27ae60; padding: 20px; border-radius: 15px; color: white; margin-top: 20px; }
-        #house-pic { width: 100%; max-width: 400px; height: 250px; border-radius: 10px; object-fit: cover; border: 4px solid white; margin-bottom: 15px; }
-        .price { font-size: 36px; font-weight: bold; margin: 15px 0; font-family: 'Courier New', monospace; }
+        #house-pic { width: 100%; max-width: 400px; height: 250px; border-radius: 10px; object-fit: cover; border: 4px solid white; margin-bottom: 15px; transition: transform 0.3s; }
+        #house-pic.spin-anim { transform: rotateY(360deg) scale(0.9); }
+        .price { font-size: 36px; font-weight: bold; margin: 15px 0; font-family: 'Courier New', monospace; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
 
         /* Nyheter */
-        .news-item { text-align: left; padding: 15px; border-bottom: 1px solid #eee; }
-        .news-item:last-child { border: none; }
+        .news-item { text-align: left; padding: 15px; border-bottom: 1px solid #eee; transition: background 0.2s; }
+        .news-item:hover { background: #fcfcfc; }
+
+        /* --- HARRY HOLE NOIR SEKSJON --- */
+        .noir-tab { background: var(--noir-bg); color: var(--noir-text); border: 5px solid #333; }
+        .noir-title { font-family: 'Courier New', Courier, monospace; color: var(--accent); font-size: 32px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 0px #000; }
+        
+        #typewriter-text { font-family: 'Courier New', Courier, monospace; text-align: left; min-height: 150px; line-height: 1.6; max-width: 600px; margin: 0 auto 30px auto; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 5px; }
+        .cursor { display: inline-block; width: 10px; background-color: var(--noir-text); animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        #crime-scene { width: 100%; height: 350px; background: black; border-radius: 10px; position: relative; overflow: hidden; cursor: none; margin-top: 20px; border: 2px solid #444; }
+        #flashlight { position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,200,0.6) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s; z-index: 10; }
+        #crime-scene:hover #flashlight { opacity: 1; }
+
+        .evidence { position: absolute; width: 40px; height: 40px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gold"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4V3zm0 2v2h2V5h-2zM4 5h2V3H4v2zm14 0h-2V3h2v2zM6 19h12v2H6v-2z"/></svg>') no-repeat center; background-size: contain; cursor: pointer; display: none; z-index: 5; }
+
     </style>
 </head>
 <body>
 
-<nav>
-    <button onclick="openTab('home')">Hjem</button>
+<nav id="main-nav">
+    <button onclick="openTab('home')" class="active-nav">Hjem</button>
     <button onclick="openTab('stress')">Stress-spill</button>
     <button onclick="openTab('bolig')">Boligmarkedet</button>
     <button onclick="openTab('pause')">Pause/Finans</button>
+    <button onclick="openTab('harry')" style="background: #333; border: 1px solid var(--accent);">Harry Hole</button>
 </nav>
 
-<div class="container">
+<div class="container" id="content-container">
     
     <div id="home" class="tab active">
         <h1>Didriks Digitale Kontordør</h1>
@@ -54,7 +82,7 @@
             TRYKK HER FOR Å BANKE PÅ DØREN TIL DIDRIK<br>
             OG BRUKE HALVE DAGEN HANS PÅ NOE
         </button>
-        <p id="disturb-msg" style="margin-top:20px; font-style:italic; color:#7f8c8d;"></p>
+        <p id="disturb-msg" style="margin-top:20px; font-style:italic; color:#7f8c8d; min-height: 1.2em;"></p>
     </div>
 
     <div id="stress" class="tab">
@@ -69,7 +97,7 @@
         <div class="slot-container">
             <img id="house-pic" src="https://loremflickr.com/400/250/mansion" alt="Bolig">
             <div class="price" id="house-price">6 500 000 kr</div>
-            <button onclick="spin()" style="padding: 10px 20px; cursor: pointer; font-size: 18px; border-radius: 5px; border: none; background: gold;">SPINN VERDIEN!</button>
+            <button onclick="spin()" style="padding: 15px 25px; cursor: pointer; font-size: 18px; border-radius: 5px; border: none; background: var(--gold); font-weight: bold; color: #333; box-shadow: 0 4px 0 #b8960c;">SPINN VERDIEN!</button>
         </div>
         <p><i>Hvert spinn genererer en ny bolig og en ny markedsverdi.</i></p>
     </div>
@@ -83,75 +111,195 @@
         </div>
     </div>
 
+    <div id="harry" class="tab noir-tab">
+        <h1 class="noir-title">Mysteriet på Kontoret</h1>
+        
+        <div id="typewriter-text"></div>
+        
+        <h3>Finn det avgjørende beviset</h3>
+        <p>Bruk lommelykten (musa) for å lete i mørket.</p>
+        <div id="crime-scene">
+            <div id="flashlight"></div>
+            <div class="evidence" id="coffee-evidence" onclick="foundEvidence()"></div>
+        </div>
+        <p id="solve-message" style="color: var(--gold); font-weight: bold; margin-top: 15px; min-height: 1.2em;"></p>
+    </div>
+
 </div>
 
 <script>
-    // Tab-system
+    // --- Global Styring ---
+    const contentContainer = document.getElementById('content-container');
+
     function openTab(name) {
+        // Oppdater Tabs
         let tabs = document.getElementsByClassName("tab");
         for (let t of tabs) t.classList.remove("active");
         document.getElementById(name).classList.add("active");
+
+        // Oppdater Navigasjon
+        let navButtons = document.querySelectorAll("#main-nav button");
+        navButtons.forEach(btn => btn.classList.remove("active-nav"));
+        event.currentTarget.classList.add("active-nav");
         
-        if(name === 'stress') startStressGame();
+        // Spesialfunksjoner for faner
+        if(name === 'stress') {
+            contentContainer.style.background = "white";
+            startStressGame();
+        } else if (name === 'harry') {
+            contentContainer.classList.add('noir-tab');
+            startNoirScene();
+        } else {
+            contentContainer.style.background = "white";
+            contentContainer.classList.remove('noir-tab');
+            stopNoirScene();
+        }
     }
 
-    // Banke på døren
+    // --- Banke på døren Logikk ---
     function disturb() {
         const msgs = [
             "Didrik ser opp fra skjermen... Han ser litt irritert ut.",
             "Didrik: 'Ja, hva er det nå da?' (Bruker nå 45 min på å forklare en Excel-feil)",
             "Du har nå offisielt ødelagt Didriks 'Deep Work' økt.",
-            "Didrik henter en kaffe. Du må bli med. Det tar en time."
+            "Didrik henter en kaffe. Du må bli med. Det tar en time.",
+            "Didrik sukker dypt og minimerer Finansavisen."
         ];
-        document.getElementById('disturb-msg').innerText = msgs[Math.floor(Math.random()*msgs.length)];
+        const msgEl = document.getElementById('disturb-msg');
+        msgEl.innerText = msgs[Math.floor(Math.random()*msgs.length)];
+        msgEl.style.animation = "fadeIn 0.3s";
+        setTimeout(() => msgEl.style.animation = "", 300);
     }
 
-    // Stress-spill
+    // --- Stress-spill Logikk ---
     let score = 0;
     let gameActive = false;
-    const items = ["Lite skoleplass", "Studentklager", "Luftkvalitet", "Møteinnkalling", "Excel-krash"];
+    let gameInterval;
+    const items = ["Lite skoleplass", "Studentklager", "Luftkvalitet", "Møteinnkalling", "Excel-krash", "Tom for kaffe", "Rentehopp"];
 
     function startStressGame() {
         if(gameActive) return;
         gameActive = true;
+        score = 0;
+        document.getElementById('score').innerText = score;
         const area = document.getElementById('game-area');
+        area.innerHTML = '';
         
-        setInterval(() => {
-            if(document.getElementById('stress').classList.contains('active')) {
-                const target = document.createElement('div');
-                target.className = 'stress-target';
-                target.innerText = items[Math.floor(Math.random()*items.length)];
-                target.style.left = Math.random() * 70 + "%";
-                target.style.top = Math.random() * 80 + "%";
-                
-                target.onclick = function() {
-                    score++;
-                    document.getElementById('score').innerText = score;
-                    this.remove();
-                };
-                
-                area.appendChild(target);
-                setTimeout(() => target.remove(), 2500);
+        gameInterval = setInterval(() => {
+            if(!document.getElementById('stress').classList.contains('active')) {
+                clearInterval(gameInterval);
+                gameActive = false;
+                return;
             }
-        }, 1000);
+            const target = document.createElement('div');
+            target.className = 'stress-target';
+            target.innerText = items[Math.floor(Math.random()*items.length)];
+            target.style.left = Math.random() * 70 + 10 + "%"; // Hold innenfor rammen
+            target.style.top = Math.random() * 70 + 10 + "%";
+            
+            target.onclick = function() {
+                score++;
+                document.getElementById('score').innerText = score;
+                this.remove();
+            };
+            
+            area.appendChild(target);
+            setTimeout(() => { if(target) target.remove(); }, 2000); // Litt raskere forsvinning
+        }, 900);
     }
 
-    // Bolig-slots
+    // --- Bolig-slots Logikk ---
     let basePrice = 6500000;
     function spin() {
-        // Nytt bilde
+        // Nytt bilde med animasjon
         const img = document.getElementById('house-pic');
+        img.classList.add('spin-anim');
         img.src = "https://loremflickr.com/400/250/house,modern?random=" + Math.random();
         
         // Ny pris
-        const change = (Math.random() * 2000000) - 900000;
+        const change = (Math.random() * 3000000) - 1200000;
         basePrice += change;
+        if(basePrice < 500000) basePrice = 500000; // Unngå absurd lave priser
+
         document.getElementById('house-price').innerText = Math.floor(basePrice).toLocaleString('no-NO') + " kr";
         
         // Farge-effekt
         const priceEl = document.getElementById('house-price');
         priceEl.style.color = change > 0 ? "#2ecc71" : "#e74c3c";
+        priceEl.style.animation = "fadeIn 0.5s";
+
+        setTimeout(() => {
+            img.classList.remove('spin-anim');
+            priceEl.style.animation = "";
+        }, 500);
     }
+
+    // --- Harry Hole / Noir Scene Logikk ---
+    const crimeScene = document.getElementById('crime-scene');
+    const flashlight = document.getElementById('flashlight');
+    const evidence = document.getElementById('coffee-evidence');
+    const typeTextEl = document.getElementById('typewriter-text');
+    let typeInterval;
+
+    const story = "Oslo kl. 08:15. Regnet pisker mot vinduet på kontoret. Didrik - nei, Harry - trekker hatten lenger ned. Kaffetrakteren er tom. Igjen. Men det er ikke det verste. Noen har tuklet med Excel-arket. 'Mysteriet med den forsvunne formelen'. Dette blir en lang dag. Han trenger et spor. Noe håndfast...";
+
+    function startNoirScene() {
+        // 1. Typewriter effekt
+        typeTextEl.innerHTML = "";
+        let i = 0;
+        clearInterval(typeInterval);
+        typeTextEl.innerHTML = '<span id="typing"></span><span class="cursor">|</span>';
+        const typingSpan = document.getElementById('typing');
+
+        typeInterval = setInterval(() => {
+            if (i < story.length) {
+                typingSpan.innerHTML += story.charAt(i);
+                i++;
+            } else {
+                clearInterval(typeInterval);
+                document.querySelector('.cursor').style.display = 'none';
+                // Vis beviset etter historien er ferdig
+                placeEvidence();
+            }
+        }, 50); // Hastighet på skriving
+
+        // 2. Lommelykt effekt
+        crimeScene.addEventListener('mousemove', moveFlashlight);
+    }
+
+    function stopNoirScene() {
+        clearInterval(typeInterval);
+        crimeScene.removeEventListener('mousemove', moveFlashlight);
+        document.getElementById('solve-message').innerText = "";
+        evidence.style.display = 'none';
+    }
+
+    function moveFlashlight(e) {
+        const rect = crimeScene.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        flashlight.style.left = x + 'px';
+        flashlight.style.top = y + 'px';
+    }
+
+    function placeEvidence() {
+        // Plasser beviset et tilfeldig sted i "mørket"
+        const x = Math.random() * 80 + 10;
+        const y = Math.random() * 80 + 10;
+        evidence.style.left = x + '%';
+        evidence.style.top = y + '%';
+        evidence.style.display = 'block';
+    }
+
+    function foundEvidence() {
+        document.getElementById('solve-message').innerText = "🏆 BEVIS FUNNET! Den tomme kaffekoppen tilhører... Øystein?! Saken er løst. Harry Didrik Hole kan endelig ta helg. (Eller, han må vel fikse det Excel-arket først).";
+        evidence.style.display = 'none';
+        
+        // Flash-effekt
+        crimeScene.style.background = "white";
+        setTimeout(() => crimeScene.style.background = "black", 100);
+    }
+
 </script>
 
 </body>
